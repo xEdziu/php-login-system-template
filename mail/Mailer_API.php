@@ -123,6 +123,19 @@
             return $response;
         }
 
+        /**
+         * It sends an email to the user with a link to activate his account
+         * 
+         * @param email the email address of the user
+         * @param hash  the hash of the user's email address
+         * 
+         * @return Array with the following keys:
+         * code: 0 if the email was sent successfully, 13 if there was an error.
+         * msg: The message to be displayed to the user.
+         * title: The title of the message to be displayed to the user.
+         * icon: The icon to be displayed to the user.
+         * btn_text: The text of the button to be displayed to the user
+         */
         public function sendActivationMail($email, $hash){
             $this->mail->Username = LOGIN_NOREPLY;
             $this->mail->Password = PASSWORD_NOREPLY;
