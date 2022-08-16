@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Form</title>
+</head>
+<body>
+    <h2>Register</h2>
+    <form id="formRegister">
+        <input id="form-username" type="text" name="username" placeholder="Username" required><br>
+        <input id="form-email" type="email" placeholder="Email" required><br>
+        <input id="form-pwd" type="password" placeholder="Password" name="password" required><br>
+        <input id="form-pwd2" type="password" placeholder="Repeat your password" name="password2" required><br>
+        <input id="form-submit" type="submit" value="Register">
+    </form>
+</body>
+<script type="text/javascript">
+    let form = document.getElementById('formRegister');
+    form.addEventListener('submit', function(e){
+        e.preventDefault();
+        let username = document.getElementById('form-username').value;
+        let email = document.getElementById('form-email').value;
+        let pwd = document.getElementById('form-pwd').value;
+        let pwd2 = document.getElementById('form-pwd2').value;
+        if(pwd != pwd2){
+            swal({
+                title: "Error",
+                text: "Passwords do not match!",
+                timer: 4000,
+                button: true,
+                allowOutsideClick: false,
+                closeOnEsc: false,
+            });
+            return;
+        } else if (pwd.length < 8){
+            swal({
+                title: "Error",
+                text: "Password must be at least 8 characters long!",
+                timer: 4000,
+                button: true,
+                allowOutsideClick: true,
+                closeOnEsc: true,
+            });
+            return;
+        }
+        let xhr = new XMLHttpRequest();
+        let formData = new FormData();
+        formData.append('username', username);
+        formData.append('email', email);
+        formData.append('password', pwd);
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                let respond = JSON.parse(this.responseText);
+                console.log(respond.err)
+                swal({
+                    title: respond.title,
+                    text: respond.msg,
+                    icon: respond.icon,
+                    button: respond.btn_text,
+                }).then((result) => {
+                    if (respond.icon == "success") {
+                        location.replace("loginForm.php")
+                    }
+                })
+            }
+        };
+        xhr.open('POST', 'register.php', true);
+        xhr.send(formData);
+    })
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert"></script>
+</html>
