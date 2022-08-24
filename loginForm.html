@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login form</title>
+</head>
+<body>
+    <form action="" method="post" class="form">
+        <input type="email" placeholder="Email" id="email">
+        <input type="password" placeholder="Hasło" id="pwd">
+        <input type="submit" value="Zaloguj się">
+    </form>
+</body>
+<script>
+    let form = document.querySelector('form');
+
+    form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                let email = document.getElementById('txt-input').value;
+                let password = document.getElementById('pwd').value;
+                    swal({
+                        title: "Loginning in...",
+                        text: "It will only take a second!",
+                        timer: 2500,
+                        button: false,
+                        allowOutsideClick: false,
+                        closeOnEsc: false,
+                        didOpen: () => {
+                            swal.showLoading();
+                        }
+                    });
+                    let formData = new FormData();
+                    console.log(email,password)
+                    formData.append('email', email);
+                    formData.append('pwd', password);
+                    let xhr = new XMLHttpRequest();
+                    xhr.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            let respond = JSON.parse(this.responseText);
+                            swal({
+                                title: respond.title,
+                                text: respond.msg,
+                                icon: respond.icon,
+                                button: respond.btn_text,
+                            }).then((result) => {
+                                if (respond.icon == "success") {
+                                    location.replace(respond.href);
+                                }
+                            })
+                        }
+                    };
+                    xhr.open('POST', 'login.php', true);
+                    xhr.send(formData);
+                });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert"></script>
+</html>
